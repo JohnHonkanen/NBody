@@ -56,7 +56,7 @@ void Body::update(double dt)
 */
 void Body::render(Renderer * r)
 {
-	r->renderCircle(dvec3(this->p0.x, this->p0.y, 0), this->mass, 30);
+	r->renderCircle(dvec3(this->p0.x, this->p0.y, 0), this->mass, 30, this->color);
 }
 /*
 	Get Current Position
@@ -78,4 +78,9 @@ dvec2 Body::getP1()
 double Body::getMass()
 {
 	return this->mass;
+}
+
+vec3 Body::getColor()
+{
+	return this->color;
 }

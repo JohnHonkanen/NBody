@@ -13,6 +13,7 @@ public:
 	dvec2 getP0();
 	dvec2 getP1();
 	double getMass();
+	vec3 getColor();
 	
 	const double GRAV_CONST = 6.673E-11; //Gravity Constant
 	const double EPS = 3E4; //Damapener to avoid infinites
