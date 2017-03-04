@@ -16,6 +16,7 @@ public:
 	virtual ~SDLRenderer();
 	void init();
 	void renderCircle(glm::dvec3 pos, double radius, int numPoints, glm::vec3 color);
+	void swap();
 	void destroy();
 };
 

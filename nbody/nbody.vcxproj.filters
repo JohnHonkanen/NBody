@@ -24,6 +24,9 @@
     <ClCompile Include="SDLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ThreeBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body.h">
@@ -35,10 +38,10 @@
     <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
+    <ClInclude Include="SDLRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SDLRenderer.h">
+    <ClInclude Include="ThreeBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,9 +1,11 @@
 #include "SDLRenderer.h"
+#include "ThreeBody.h"
 int main(int argc, char *argv[])
 {
 	SDLRenderer renderer;
 	renderer.init();
-	std::cin.get();
+	ThreeBody sim;
+	sim.run(&renderer);
 	renderer.destroy();
 	return 0;
 }

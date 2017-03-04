@@ -155,13 +155,14 @@
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SDLRenderer.cpp" />
+    <ClCompile Include="ThreeBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
-    <ClInclude Include="Physics.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SDLRenderer.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="ThreeBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

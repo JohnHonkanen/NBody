@@ -68,6 +68,11 @@ void SDLRenderer::renderCircle(glm::dvec3 pos, double radius, int numPoints, glm
 	glEnd();
 }
 
+void SDLRenderer::swap()
+{
+	SDL_GL_SwapWindow(window);
+}
+
 void SDLRenderer::destroy()
 {
 	SDL_GL_DeleteContext(glContext);

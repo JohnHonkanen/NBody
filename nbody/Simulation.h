@@ -1,6 +1,5 @@
 #pragma once
 #include "Renderer.h"
-#include "Physics.h"
 class Simulation
 {
 public:
@@ -9,7 +8,7 @@ public:
 	virtual void init() = 0;
 	virtual void run(Renderer *r) = 0;
 private:
-	virtual void render() = 0;
-	virtual void update(Physics *p) = 0;
+	virtual void render(Renderer *r) = 0;
+	virtual void update() = 0;
 
 };
