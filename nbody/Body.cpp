@@ -77,6 +77,24 @@ void Body::render(Renderer * r)
 {
 	r->renderCircle(dvec3(this->p0.x, this->p0.y, 0), this->radius, 30, this->color);
 }
+
+bool Body::checkCollision(Body b)
+{
+	dvec2 op = b.getP0(); //Other Body's Position
+	double dx = op.x - this->p0.x;
+	double dy = op.y - this->p0.y;
+	double dist = sqrt(dx*dx + dy*dy);
+	if (dist < (this->radius + b.getRadius()))
+		return true;
+	return false;
+}
+
+void Body::add(Body b)
+{
+	this->mass += b.getMass();
+	this->radius += b.getRadius();
+}
+
 /*
 	Get Current Position
 */

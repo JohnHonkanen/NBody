@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <glew.h>
 #include <vector>
+#include <stack>;
 #include <iostream>
 #include "Simulation.h"
 #include "Body.h"
@@ -16,6 +17,7 @@ private:
 	void update();
 	bool pollEvents(SDL_Event e);
 	vector<Body> bodies;
+	stack <int> colBodies;
 	double dt;
 public:
 	ThreeBody();
