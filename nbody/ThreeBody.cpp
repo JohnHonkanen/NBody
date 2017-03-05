@@ -32,19 +32,23 @@ void ThreeBody::update()
 					if (iB.getMass() > jB.getMass()) {
 						colBodies.push(j);
 						iB.add(jB);
+						iB.inelasticCollision(jB);
 					}
 					else if(iB.getMass() < jB.getMass()) {
 						colBodies.push(i);
 						jB.add(iB);
+						jB.inelasticCollision(iB);
 					}
 					else {
 						if (i < j) {
 							colBodies.push(j);
 							iB.add(jB);
+							iB.inelasticCollision(jB);
 						}
 						else {
 							colBodies.push(i);
 							jB.add(iB);
+							jB.inelasticCollision(iB);
 						}
 					}
 						

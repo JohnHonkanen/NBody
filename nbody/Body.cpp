@@ -89,6 +89,29 @@ bool Body::checkCollision(Body b)
 	return false;
 }
 
+void Body::inelasticCollision(Body b)
+{
+	std::cout << "Before " << this->a0.x << "||" << this->a0.y << std::endl;
+	//Momentum for this Body
+	double mx = this->a0.x*this->mass;
+	double my = this->a0.y*this->mass;
+
+	//Momentum for other Body
+	dvec2 oa = b.getCurrentAccleration();
+	double omx = oa.x*b.getMass();
+	double omy = oa.y*b.getMass();
+
+	//Total Mass
+	double tm = 1/(this->mass + b.getMass());
+
+	//Final Velocity
+	double vfx = (mx + omx) * tm;
+	double vfy = (my + omy) * tm;
+
+	this->a0 = dvec2(vfx,vfy);
+	std::cout << "After " << this->a0.x << "||" << this->a0.y << std::endl;
+}
+
 void Body::add(Body b)
 {
 	this->mass += b.getMass();
@@ -125,4 +148,9 @@ double Body::getRadius()
 vec3 Body::getColor()
 {
 	return this->color;
+}
+
+dvec2 Body::getCurrentAccleration()
+{
+	return this->a0;
 }

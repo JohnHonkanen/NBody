@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <glm\glm.hpp>
 #include "Renderer.h"
 using namespace glm;
@@ -14,12 +15,14 @@ public:
 	void resetForce();
 	void render(Renderer *r);
 	bool checkCollision(Body b);
+	void inelasticCollision(Body b);
 	void add(Body b);
 	dvec2 getP0();
 	dvec2 getP1();
 	double getMass();
 	double getRadius();
 	vec3 getColor();
+	dvec2 getCurrentAccleration();
 	
 	double GRAV_CONST = 6.673E-11; //Gravity Constant
 	double EPS = 1; //Damapener to avoid infinites
