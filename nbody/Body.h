@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <glm\glm.hpp>
 #include "Renderer.h"
 using namespace glm;
@@ -13,14 +14,20 @@ public:
 	void update(double dt);
 	void resetForce();
 	void render(Renderer *r);
+	bool checkCollision(Body b);
+	void inelasticCollision(Body b);
+	void add(Body b);
+	void addAcc(double ax, double ay);
+	void addMass(double mass);
 	dvec2 getP0();
 	dvec2 getP1();
 	double getMass();
 	double getRadius();
 	vec3 getColor();
-	
-	const double GRAV_CONST = 6.673E-11; //Gravity Constant
-	const double EPS = 1; //Damapener to avoid infinites
+	dvec2 getCurrentAccleration();
+
+	double GRAV_CONST = 6.673E-11; //Gravity Constant
+	double EPS = 1; //Damapener to avoid infinites
 private:
 	dvec2 p0, p1; //Positions
 	dvec2 v0, v1; //Velocity

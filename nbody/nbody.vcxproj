@@ -74,6 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\dev\glew-2.0.0\include;C:\dev\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -152,14 +153,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BarnesHutSim.cpp" />
+    <ClCompile Include="BarnesHutTree.cpp" />
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="Rnd.cpp" />
     <ClCompile Include="SDLRenderer.cpp" />
     <ClCompile Include="ThreeBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BarnesHutSim.h" />
+    <ClInclude Include="BarnesHutTree.h" />
     <ClInclude Include="Body.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Quad.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Rnd.h" />
     <ClInclude Include="SDLRenderer.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="ThreeBody.h" />

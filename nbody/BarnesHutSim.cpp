@@ -1,5 +1,5 @@
 #include "BarnesHutSim.h"
-
+#include "Rnd.h"
 
 
 void BarnesHutSim::render(Renderer * r)
@@ -21,7 +21,44 @@ void BarnesHutSim::render(Renderer * r)
 
 void BarnesHutSim::update()
 {
+	for (int i = 0; i < bodies.size(); i++) {
+		Body &iB = this->bodies[i];
+		for (int j = 0; j < bodies.size(); j++) {
+			Body &jB = this->bodies[j];
+			if (i != j) {
+				iB.calculateForce(jB);
+				if (iB.checkCollision(jB)) {
+					cout << i << " is colliding with " << j << endl;
+					if (iB.getMass() > jB.getMass()) {
+						colBodies.push(j);
+						iB.add(jB);
+					}
+					else if (iB.getMass() < jB.getMass()) {
+						colBodies.push(i);
+						jB.add(iB);
+					}
+					else {
+						if (i < j) {
+							colBodies.push(j);
+							iB.add(jB);
+						}
+						else {
+							colBodies.push(i);
+							jB.add(iB);
+						}
+					}
 
+				}
+			}
+		}
+		iB.update(dt);
+		iB.resetForce();
+	}
+
+	while (!colBodies.empty()) {
+		bodies.erase(bodies.begin() + colBodies.top());
+		colBodies.pop();
+	}
 }
 
 bool BarnesHutSim::pollEvents(SDL_Event e)
@@ -54,10 +91,7 @@ BarnesHutSim::~BarnesHutSim()
 
 void BarnesHutSim::init()
 {
-	dt = 1e4;
-	bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
-	bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
-	bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
+
 }
 
 void BarnesHutSim::run(Renderer * r)
