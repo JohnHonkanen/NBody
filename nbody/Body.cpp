@@ -3,7 +3,14 @@
 Body::Body()
 {
 }
-
+/*
+	@param p Position
+	@param v Velocity
+	@param a Acceleration
+	@param m Mass
+	@param r Radius
+	@param c Color
+*/
 Body::Body(dvec2 p, dvec2 v, dvec2 a, double m, double r, vec3 c)
 {
 	this->p0 = p, this->p1 = p;
@@ -33,7 +40,10 @@ void Body::calculateForce(Body b)
 	double A = (GRAV_CONST*b.getMass()) / (dist*dist + EPS*EPS);
 	this->ta += dvec2(A * dx, A * dy);
 }
-
+/*
+	Verlett velocity solver for motion
+	@param dt timestep/delta time
+*/
 void Body::verlettStep(double dt)
 {
 	//Calculate position + 1
@@ -66,6 +76,9 @@ void Body::update(double dt)
 	this->a0 = this->a1;
 	this->v0 = this->v1;
 }
+/*
+	Resets temporary acceleration/force
+*/
 void Body::resetForce()
 {
 	this->ta = dvec2(0);
@@ -77,7 +90,10 @@ void Body::render(Renderer * r)
 {
 	r->renderCircle(dvec3(this->p0.x, this->p0.y, 0), this->radius, 30, this->color);
 }
-
+/*
+	Circle-circle Collision
+	@param Body to check
+*/
 bool Body::checkCollision(Body b)
 {
 	dvec2 op = b.getP0(); //Other Body's Position
@@ -88,7 +104,10 @@ bool Body::checkCollision(Body b)
 		return true;
 	return false;
 }
-
+/*
+	Calculates the inelastic Collision while maintaining momentum
+	@param Colliding Body
+*/
 void Body::inelasticCollision(Body b)
 {
 	std::cout << "Before " << this->a0.x << "||" << this->a0.y << std::endl;
@@ -109,9 +128,12 @@ void Body::inelasticCollision(Body b)
 	double vfy = (my + omy) * tm;
 
 	this->a0 = dvec2(vfx,vfy);
-	std::cout << "After " << this->a0.x << "||" << this->a0.y << std::endl;
+	std::cout << "After  " << this->a0.x << "||" << this->a0.y << std::endl;
 }
-
+/*
+	Add mass and radius from the a body
+	@param b Body
+*/
 void Body::add(Body b)
 {
 	this->mass += b.getMass();
@@ -139,17 +161,23 @@ double Body::getMass()
 {
 	return this->mass;
 }
-
+/*
+	Get Radius
+*/
 double Body::getRadius()
 {
 	return this->radius;
 }
-
+/*
+	Get Colour
+*/
 vec3 Body::getColor()
 {
 	return this->color;
 }
-
+/*
+	Get Current Acceleration
+*/
 dvec2 Body::getCurrentAccleration()
 {
 	return this->a0;

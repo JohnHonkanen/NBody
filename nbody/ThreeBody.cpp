@@ -13,7 +13,6 @@ void ThreeBody::render(Renderer * r)
 	for (int i = 0; i < bodies.size(); i++) {
 		glm::dvec2 p = this->bodies[i].getP0();
 		this->bodies[i].render(r);
-		//r->renderCircle(dvec3(p.x, p.y, 0),this->bodies[i].getRadius(), 30, this->bodies[i].getColor());
 	}
 
 	r->swap();
@@ -21,6 +20,7 @@ void ThreeBody::render(Renderer * r)
 
 void ThreeBody::update()
 {
+	//Brute Force for Calculating force and checks for collision
 	for (int i = 0; i < bodies.size(); i++) {
 		Body &iB = this->bodies[i];
 		for (int j = 0; j < bodies.size(); j++) {
@@ -56,9 +56,10 @@ void ThreeBody::update()
 			}
 		}
 		iB.update(dt);
-		iB.resetForce();
+		iB.resetForce(); 
 	}
 
+	//Clear colliding Bodies from Simulation
 	while (!colBodies.empty()) {
 		bodies.erase(bodies.begin() + colBodies.top());
 		colBodies.pop();
