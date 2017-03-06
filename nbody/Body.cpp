@@ -89,8 +89,11 @@ bool Body::checkCollision(Body b)
 	dvec2 op = b.getP0(); //Other Body's Position
 	double dx = op.x - this->position.x;
 	double dy = op.y - this->position.y;
-	double dist = sqrt(dx*dx + dy*dy);
-	if (dist < (this->radius + b.getRadius()))
+
+	dvec2 deltaDist = b.getPosition() - this->position;
+	double distSqrd = dot(deltaDist, deltaDist);
+	double radiusSqrd = (this->radius + b.getRadius()) * (this->radius + b.getRadius());
+	if (distSqrd < radiusSqrd)
 		return true;
 	return false;
 }
@@ -127,6 +130,10 @@ void Body::add(Body b)
 /*
 */
 dvec2 Body::getP0()
+{
+	return this->position;
+}
+dvec2 Body::getPosition()
 {
 	return this->position;
 }

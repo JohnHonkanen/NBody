@@ -18,7 +18,8 @@ public:
 	bool checkCollision(Body b);
 	void inelasticCollision(Body b);
 	void add(Body b);
-	dvec2 getP0();
+	dvec2 getP0();//Depreciated
+	dvec2 getPosition();
 	double getMass();
 	double getRadius();
 	vec3 getColor();
