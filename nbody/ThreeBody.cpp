@@ -51,12 +51,17 @@ void ThreeBody::update()
 							jB.inelasticCollision(iB);
 						}
 					}
-
 				}
 			}
 		}
 		iB.update(dt);
-		iB.resetForce();
+		iB.resetForce(); 
+	}
+
+	//Clear colliding Bodies from Simulation
+	while (!colBodies.empty()) {
+		bodies.erase(bodies.begin() + colBodies.top());
+		colBodies.pop();
 	}
 
 	//Clear colliding Bodies from Simulation
@@ -97,8 +102,8 @@ ThreeBody::~ThreeBody()
 void ThreeBody::init()
 {
 	dt = 1e4;
-	bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
-	bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
+	bodies.push_back(Body(dvec2(500,300), dvec2(0,0), dvec2(0), 1, 10, vec3(1.0,1.0,1.0)));
+	bodies.push_back(Body(dvec2(500, -500), dvec2(-0,0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
 	bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
 }
 

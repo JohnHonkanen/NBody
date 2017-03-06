@@ -25,7 +25,6 @@ public:
 	vec3 getColor();
 	dvec2 getCurrentAccleration();
 	dvec2 getCurrentVelocity();
-
 	double GRAV_CONST = 6.673E-11; //Gravity Constant
 	double EPS = 1; //Damapener to avoid infinites
 private:

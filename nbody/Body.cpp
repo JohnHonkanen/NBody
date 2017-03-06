@@ -115,20 +115,21 @@ bool Body::checkCollision(Body b)
 Calculates the inelastic Collision while maintaining momentum
 @param Colliding Body
 */
+
 void Body::inelasticCollision(Body b)
 {
-	std::cout << "Before " << this->v0.x << "||" << this->v0.y << std::endl;
+	std::cout << "Before " << this->a0.x << "||" << this->a0.y << std::endl;
 	//Momentum for this Body
-	double mx = this->v0.x*this->mass;
-	double my = this->v0.y*this->mass;
+	double mx = this->a0.x*this->mass;
+	double my = this->a0.y*this->mass;
 
 	//Momentum for other Body
-	dvec2 va = b.getCurrentVelocity();
-	double omx = va.x*b.getMass();
-	double omy = va.y*b.getMass();
+	dvec2 oa = b.getCurrentAccleration();
+	double omx = oa.x*b.getMass();
+	double omy = oa.y*b.getMass();
 
 	//Total Mass
-	double tm = 1 / (this->mass + b.getMass());
+	double tm = 1/(this->mass + b.getMass());
 
 	//Final Velocity
 	double vfx = (mx + omx) * tm;
@@ -137,9 +138,10 @@ void Body::inelasticCollision(Body b)
 	this->v0 = dvec2(vfx, vfy);
 	std::cout << "After  " << this->v0.x << "||" << this->v0.y << std::endl;
 }
+
 /*
-Add mass and radius from the a body
-@param b Body
+	Add mass and radius from the a body
+	@param b Body
 */
 void Body::add(Body b)
 {
@@ -149,8 +151,8 @@ void Body::add(Body b)
 	cout << "Mass " << &this->mass << endl;
 }
 
+
 /*
-Get Current Position
 */
 dvec2 Body::getP0()
 {
@@ -186,6 +188,7 @@ vec3 Body::getColor()
 }
 /*
 Get Current Acceleration
+
 */
 dvec2 Body::getCurrentAccleration()
 {
