@@ -1,178 +1,3 @@
-/*
-#include "BarnesHutTree.h"
-
-BarnesHutTree::BarnesHutTree(Quad * q)
-{
-	this->quad = q;
-	this->body = nullptr;
-	this->NW = nullptr;
-	this->NE = nullptr;
-	this->SW = nullptr;
-	this->SE = nullptr;
-}
-
-BarnesHutTree::~BarnesHutTree()
-{
-}
-
-bool BarnesHutTree::isExternal(BarnesHutTree * t)
-{
-	if ((t->NW == nullptr) && (t->NE == nullptr) && (t->SW == nullptr) && (t->SE == nullptr))
-		return true;
-	return false;
-}
-
-void BarnesHutTree::insert(Body *b)
-{
-	if (this->body == nullptr) {
-		this->totalMass = b->getMass();
-		this->cmx = b->getP0().x;
-		this->cmy = b->getP0().y;
-		this->body = b;
-	}
-	else if (this->isExternal(this) == false) {
-		double tMass = this->totalMass + b->getMass();
-		this->cmx = (this->cmx * this->totalMass + b->getP0().x* b->getMass()) / tMass;
-		this->cmy = (this->cmy * this->totalMass + b->getP0().x* b->getMass()) / tMass;
-		this->totalMass = tMass;
-		//this->body = placeHolder;
-
-		Quad *northWest = this->quad->NW();
-		if (northWest->contains(b->getP0().x, b->getP0().y)) {
-			if (this->NW == nullptr) {
-				this->NW = new BarnesHutTree(northWest);
-			}
-			this->NW->insert(b);
-		}
-		else {
-			Quad *northEast = this->quad->SW();
-			if (northWest->contains(b->getP0().x, b->getP0().y)) {
-				if (this->NE == nullptr) {
-					this->NE = new BarnesHutTree(northEast);
-				}
-				this->NE->insert(b);
-			}
-			else {
-				Quad *southEast = this->quad->SE();
-				if (southEast->contains(b->getP0().x, b->getP0().y)) {
-					if (this->SE == nullptr) {
-						this->SE = new BarnesHutTree(southEast);
-					}
-					this->SE->insert(b);
-				}
-				else {
-					Quad *southWest = this->quad->SW();
-					if (this->SW == nullptr) {
-						this->SW = new BarnesHutTree(southWest);
-					}
-					this->SW->insert(b);
-				}
-			}
-		}
-	}
-	else if (this->isExternal(this)) {
-		Body * c = this->body;
-		Quad *northWest = this->quad->NW();
-		if (northWest->contains(c->getP0().x, b->getP0().y)) {
-			if (this->NW == nullptr) {
-				this->NW = new BarnesHutTree(northWest);
-			}
-			this->NW->insert(c);
-		}
-		else {
-			Quad *northEast = this->quad->NE();
-			if (northEast->contains(c->getP0().x, b->getP0().y)) {
-				if (this->NE == nullptr) {
-					this->NE = new BarnesHutTree(northEast);
-				}
-				this->NE->insert(c);
-			}
-			else {
-				Quad *southEast = this->quad->SE();
-				if (southEast->contains(c->getP0().x, b->getP0().y)) {
-					if (this->SE == nullptr) {
-						this->SE = new BarnesHutTree(southEast);
-					}
-					this->SE->insert(c);
-				}
-				else {
-					Quad *southWest = this->quad->SW();
-					if (this->SW == nullptr) {
-						this->SW = new BarnesHutTree(southWest);
-					}
-					this->SW->insert(c);
-
-				}
-			}
-		}
-		this->insert(b);
-	}
-}
-
-void BarnesHutTree::updateForce(Body* b)
-{
-	if (this->isExternal(this)) {
-
-		double dx = this->cmx - (b->getP0().x);
-		double dy = this->cmy - (b->getP0().y);
-		double distance = sqrt(dx*dx + dy*dy);
-		double A = (GRAV_CONST * b->getMass()) / ((distance*distance) + (EPS*EPS));
-
-		if (this->body != b) {
-
-			b->addAcc((A*dx / distance), (A*dy / distance));
-
-		}
-		else if (this->quad->getLength() / (distance, (b->getP0().x), (b->getP0().y)) < 2.0) {
-
-			double dx = this->cmx - (b->getP0().x);
-			double dy = this->cmy - (b->getP0().y);
-			double dist = sqrt(dx*dx + dy*dy);
-			A = (GRAV_CONST * b->getMass()) / ((distance*distance) + (EPS*EPS));
-			b->addAcc((A*dx / distance), (A*dy / distance));
-
-		}
-		else {
-			if (this->NW != nullptr)
-				this->NW->updateForce(b);
-			if (this->SW != nullptr)
-				this->SW->updateForce(b);
-			if (this->SE != nullptr)
-				this->SE->updateForce(b);
-			if (this->NE != nullptr)
-				this->NE->updateForce(b);
-		}
-	}
-}
-
-void BarnesHutTree::draw()
-{
-	this->quad->draw();
-	if (this->NW != nullptr)
-		this->NW->draw();
-	if (this->SW != nullptr)
-		this->SW->draw();
-	if (this->SE != nullptr)
-		this->SE->draw();
-	if (this->NE != nullptr)
-		this->NE->draw();
-}
-
-void BarnesHutTree::clearTree()
-{
-	if (this->NW != nullptr)
-		delete this->NW;
-	if (this->SW != nullptr)
-		delete this->SW;
-	if (this->SE != nullptr)
-		delete this->SE;
-	if (this->NE != nullptr)
-		delete this->NE;
-
-	delete this->quad;
-	delete this;
-}
-*/
 #include "BarnesHutTree.h"
 
 BarnesHutTree::BarnesHutTree(Quad * q, unsigned int depth)
@@ -196,13 +21,10 @@ bool BarnesHutTree::isExternal(BarnesHutTree * t)
 	return false;
 }
 
-void BarnesHutTree::insert(Body *b)
+void BarnesHutTree::insert(int key,Body *b)
 {
-	if (this->hasBody == false) {
-		this->totalMass = b->getMass();
-		this->cmx = b->getP0().x;
-		this->cmy = b->getP0().y;
-		this->bodies.push_back(b);
+	if (this->hasBody == false || depth > MAX_DEPTH) {
+		this->bodies.insert(pair<int, Body*>(key, b));
 		this->hasBody = true;
 	}
 	else if (this->isExternal(this) == false) {
@@ -210,7 +32,7 @@ void BarnesHutTree::insert(Body *b)
 		this->cmx = (this->cmx * this->totalMass + b->getP0().x* b->getMass()) / tMass;
 		this->cmy = (this->cmy * this->totalMass + b->getP0().y* b->getMass()) / tMass;
 		this->totalMass = tMass;
-		this->bodies.push_back(b);
+		this->bodies.insert(pair<int, Body*>(key, b));
 
 		if (depth < MAX_DEPTH) {
 			Quad *northWest = this->quad->NW();
@@ -218,7 +40,7 @@ void BarnesHutTree::insert(Body *b)
 				if (this->NW == nullptr) {
 					this->NW = new BarnesHutTree(northWest, depth + 1);
 				}
-				this->NW->insert(b);
+				this->NW->insert(key,b);
 			}
 			else {
 				Quad *northEast = this->quad->NE();
@@ -226,7 +48,7 @@ void BarnesHutTree::insert(Body *b)
 					if (this->NE == nullptr) {
 						this->NE = new BarnesHutTree(northEast, depth + 1);
 					}
-					this->NE->insert(b);
+					this->NE->insert(key,b);
 				}
 				else {
 					Quad *southEast = this->quad->SE();
@@ -234,102 +56,113 @@ void BarnesHutTree::insert(Body *b)
 						if (this->SE == nullptr) {
 							this->SE = new BarnesHutTree(southEast, depth + 1);
 						}
-						this->SE->insert(b);
+						this->SE->insert(key,b);
 					}
 					else {
 						Quad *southWest = this->quad->SW();
 						if (this->SW == nullptr) {
 							this->SW = new BarnesHutTree(southWest, depth + 1);
 						}
-						this->SW->insert(b);
+						this->SW->insert(key,b);
 					}
 				}
 			}
 		}
 	}
 	else if (this->isExternal(this)) {
-		Body * c = this->bodies[0];
+		map<int, Body*>::iterator it = this->bodies.begin();
 		if (depth < MAX_DEPTH) {
 			Quad *northWest = this->quad->NW();
-			if (northWest->contains(c->getP0().x, c->getP0().y)) {
+			if (northWest->contains(it->second->getP0().x, it->second->getP0().y)) {
 				if (this->NW == nullptr) {
 					this->NW = new BarnesHutTree(northWest, depth + 1);
 				}
-				this->NW->insert(c);
+				this->NW->insert(it->first, it->second);
 			}
 			else {
 				Quad *northEast = this->quad->NE();
-				if (northEast->contains(c->getP0().x, c->getP0().y)) {
+				if (northEast->contains(it->second->getP0().x, it->second->getP0().y)) {
 					if (this->NE == nullptr) {
 						this->NE = new BarnesHutTree(northEast, depth + 1);
 					}
-					this->NE->insert(c);
+					this->NE->insert(it->first, it->second);
 				}
 				else {
 					Quad *southEast = this->quad->SE();
-					if (southEast->contains(c->getP0().x, c->getP0().y)) {
+					if (southEast->contains(it->second->getP0().x, it->second->getP0().y)) {
 						if (this->SE == nullptr) {
 							this->SE = new BarnesHutTree(southEast, depth + 1);
 						}
-						this->SE->insert(c);
+						this->SE->insert(it->first, it->second);
 					}
 					else {
 						Quad *southWest = this->quad->SW();
 						if (this->SW == nullptr) {
 							this->SW = new BarnesHutTree(southWest, depth + 1);
 						}
-						this->SW->insert(c);
+						this->SW->insert(it->first, it->second);
 
 					}
 				}
 			}
-			this->insert(b);
+			this->insert(key, b);
 		}
 	}
 }
 
-void BarnesHutTree::updateForce(Body* b, int &colliding)
+void BarnesHutTree::updateForce(int i, Body *body, stack<int> &colBodies, vector<Body> &tb)
 {
-	if (b == nullptr)
-		return;
-
-	//maybe idek
-	double dx = this->cmx - (b->getP0().x);
-	double dy = this->cmy - (b->getP0().y);
-	double distance = sqrt(dx*dx + dy*dy);
-	double A = (GRAV_CONST * b->getMass()) / ((distance*distance) + (EPS*EPS));
-	//maybeidek
-
+	
+	Body *iB = body;
 	if (this->isExternal(this)) {
 
-		for (unsigned int i = 0; i < this->bodies.size(); i++) {
-			if (this->bodies[i] != b && this->bodies[i] != nullptr) {
-				if (b->checkCollision(*this->bodies[i])) {
-					this->bodies[i]->addMass(b->getMass());
-					//this->bodies[i]->calculateRadius();
-					colliding = 1;
-					//cout << "colliding";
-				}
-				else {
-					//b->addForce(this->bodies[i]->py, this->bodies[i]->py, this->bodies[i]->mass);
-					b->addAcc((A*dx / distance), (A*dy / distance));
-				}
 
+		for (map<int,Body*>::iterator it = this->bodies.begin(); it != this->bodies.end(); it++) {
+			/*
+				Check Forces, Check Collision, Add to colliding Bodies
+			*/
+			int key = it->first;
+			if (i != key) {
+				Body *jB = &tb[key];
+				iB->calculateForce(*jB);
+
+				if (iB->checkCollision(*jB)) {
+					if (iB->getMass() > jB->getMass()) {
+						colBodies.push(key);
+						iB->add(*jB);
+						iB->inelasticCollision(*jB);
+						cout << "IB Mass: " << iB << endl;
+						cout << "jB Mass: " << jB << endl;
+					}
+					else {
+						colBodies.push(key);
+						iB->add(*jB);
+						iB->inelasticCollision(*jB);
+						cout << "IB Mass: " << iB << endl;
+						cout << "jB Mass: " << jB << endl;
+						
+					}
+
+				}
 			}
 		}
 	}
-	else if (this->quad->getLength() / (distance, (b->getP0().x), (b->getP0().y)) < 2.0) {
-		b->addAcc((A*dx / distance), (A*dy / distance));
+	else if (this->quad->getLength() / this->checkDistance(this->cmx, this->cmy, *iB) < 2.0) {
+		/*
+			Check Forces using Center of Mass
+		*/
+		Body cmb = Body(dvec2(this->cmx, this->cmy), dvec2(0), dvec2(0), this->totalMass, 0 , dvec3(0));
+		iB->calculateForce(cmb);
 	}
 	else {
 		if (this->NW != nullptr)
-			this->NW->updateForce(b, colliding);
+			this->NW->updateForce(i, body, colBodies, tb);
 		if (this->SW != nullptr)
-			this->SW->updateForce(b, colliding);
+			this->SW->updateForce(i, body, colBodies, tb);
 		if (this->SE != nullptr)
-			this->SE->updateForce(b, colliding);
+			this->SE->updateForce(i, body, colBodies, tb);
 		if (this->NE != nullptr)
-			this->NE->updateForce(b, colliding);
+			this->NE->updateForce(i, body, colBodies, tb);
 	}
 }
 
@@ -348,7 +181,9 @@ void BarnesHutTree::draw()
 
 void BarnesHutTree::clearTree()
 {
-	this->bodies.clear();
+	if(this->bodies.size() > 0)
+		this->bodies.clear();
+
 	if (this->NW != nullptr)
 		delete this->NW;
 	if (this->SW != nullptr)
@@ -360,4 +195,18 @@ void BarnesHutTree::clearTree()
 
 	delete this->quad;
 	delete this;
+}
+
+double BarnesHutTree::checkDistance(Body a, Body b)
+{
+	double dx = b.getP0().x - a.getP0().x;
+	double dy = b.getP0().y - a.getP0().y;
+	return sqrt(dx*dx + dy*dy);
+}
+
+double BarnesHutTree::checkDistance(double cmx, double cmy, Body a)
+{
+	double dx = cmx - a.getP0().x;
+	double dy = cmy - a.getP0().y;
+	return sqrt(dx*dx + dy*dy);
 }

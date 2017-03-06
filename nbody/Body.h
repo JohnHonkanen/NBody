@@ -3,6 +3,7 @@
 #include <glm\glm.hpp>
 #include "Renderer.h"
 using namespace glm;
+using namespace std;
 class Body
 {
 public:
@@ -17,14 +18,13 @@ public:
 	bool checkCollision(Body b);
 	void inelasticCollision(Body b);
 	void add(Body b);
-	void addAcc(double ax, double ay);
-	void addMass(double mass);
 	dvec2 getP0();
 	dvec2 getP1();
 	double getMass();
 	double getRadius();
 	vec3 getColor();
 	dvec2 getCurrentAccleration();
+	dvec2 getCurrentVelocity();
 
 	double GRAV_CONST = 6.673E-11; //Gravity Constant
 	double EPS = 1; //Damapener to avoid infinites

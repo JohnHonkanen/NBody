@@ -11,48 +11,32 @@ void BarnesHutSim::render(Renderer * r)
 	glColor3f(0.5, 1.0, 1.0);
 
 	for (int i = 0; i < bodies.size(); i++) {
-		glm::dvec2 p = this->bodies[i].getP0();
 		this->bodies[i].render(r);
-		//r->renderCircle(dvec3(p.x, p.y, 0),this->bodies[i].getRadius(), 30, this->bodies[i].getColor());
 	}
 
+	tree->draw();
 	r->swap();
 }
 
 void BarnesHutSim::update()
 {
-	for (int i = 0; i < bodies.size(); i++) {
-		Body &iB = this->bodies[i];
-		for (int j = 0; j < bodies.size(); j++) {
-			Body &jB = this->bodies[j];
-			if (i != j) {
-				iB.calculateForce(jB);
-				if (iB.checkCollision(jB)) {
-					cout << i << " is colliding with " << j << endl;
-					if (iB.getMass() > jB.getMass()) {
-						colBodies.push(j);
-						iB.add(jB);
-					}
-					else if (iB.getMass() < jB.getMass()) {
-						colBodies.push(i);
-						jB.add(iB);
-					}
-					else {
-						if (i < j) {
-							colBodies.push(j);
-							iB.add(jB);
-						}
-						else {
-							colBodies.push(i);
-							jB.add(iB);
-						}
-					}
+	tree->clearTree();
 
-				}
-			}
+	this->quad = new Quad(0, 0, 2 * 4000);
+	tree = new BarnesHutTree(this->quad, 0);
+
+	for (int i = 0; i < this->bodies.size(); i++) {
+		if (quad->contains(bodies[i].getP0().x, bodies[i].getP0().y)) {
+			tree->insert(i, &this->bodies[i]);
 		}
-		iB.update(dt);
-		iB.resetForce();
+	}
+
+	for (int i = 0; i < this->bodies.size(); i++) {
+		this->bodies[i].resetForce();
+		if (quad->contains(bodies[i].getP0().x, bodies[i].getP0().y)) {
+			tree->updateForce(i, &this->bodies[i], this->colBodies, this->bodies);
+			this->bodies[i].update(dt);
+		}
 	}
 
 	while (!colBodies.empty()) {
@@ -82,8 +66,9 @@ bool BarnesHutSim::pollEvents(SDL_Event e)
 
 BarnesHutSim::BarnesHutSim()
 {
+	this->quad = new Quad(0, 0, 2 * 4000);
+	tree = new BarnesHutTree(this->quad, 0);
 }
-
 
 BarnesHutSim::~BarnesHutSim()
 {
@@ -91,7 +76,11 @@ BarnesHutSim::~BarnesHutSim()
 
 void BarnesHutSim::init()
 {
-
+	dt = 1e4;
+	bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
+	bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
+	bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
+	bodies.push_back(Body(dvec2(0, 0), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
 }
 
 void BarnesHutSim::run(Renderer * r)

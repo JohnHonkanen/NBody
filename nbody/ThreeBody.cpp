@@ -1,8 +1,8 @@
-#include "BarnesHutSim.h"
+#include "ThreeBody.h"
 
 
 
-void BarnesHutSim::render(Renderer * r)
+void ThreeBody::render(Renderer * r)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -13,18 +13,60 @@ void BarnesHutSim::render(Renderer * r)
 	for (int i = 0; i < bodies.size(); i++) {
 		glm::dvec2 p = this->bodies[i].getP0();
 		this->bodies[i].render(r);
-		//r->renderCircle(dvec3(p.x, p.y, 0),this->bodies[i].getRadius(), 30, this->bodies[i].getColor());
 	}
 
 	r->swap();
 }
 
-void BarnesHutSim::update()
+void ThreeBody::update()
 {
+	//Brute Force for Calculating force and checks for collision
+	for (int i = 0; i < bodies.size(); i++) {
+		Body &iB = this->bodies[i];
+		for (int j = 0; j < bodies.size(); j++) {
+			Body &jB = this->bodies[j];
+			if (i != j) {
+				iB.calculateForce(jB);
+				if (iB.checkCollision(jB)) {
+					cout << i << " is colliding with " << j << endl;
+					if (iB.getMass() > jB.getMass()) {
+						colBodies.push(j);
+						iB.add(jB);
+						iB.inelasticCollision(jB);
+					}
+					else if (iB.getMass() < jB.getMass()) {
+						colBodies.push(i);
+						jB.add(iB);
+						jB.inelasticCollision(iB);
+					}
+					else {
+						if (i < j) {
+							colBodies.push(j);
+							iB.add(jB);
+							iB.inelasticCollision(jB);
+						}
+						else {
+							colBodies.push(i);
+							jB.add(iB);
+							jB.inelasticCollision(iB);
+						}
+					}
 
+				}
+			}
+		}
+		iB.update(dt);
+		iB.resetForce();
+	}
+
+	//Clear colliding Bodies from Simulation
+	while (!colBodies.empty()) {
+		bodies.erase(bodies.begin() + colBodies.top());
+		colBodies.pop();
+	}
 }
 
-bool BarnesHutSim::pollEvents(SDL_Event e)
+bool ThreeBody::pollEvents(SDL_Event e)
 {
 	if (e.type == SDL_QUIT)
 		return false;
@@ -43,16 +85,16 @@ bool BarnesHutSim::pollEvents(SDL_Event e)
 	return true;
 }
 
-BarnesHutSim::BarnesHutSim()
+ThreeBody::ThreeBody()
 {
 }
 
 
-BarnesHutSim::~BarnesHutSim()
+ThreeBody::~ThreeBody()
 {
 }
 
-void BarnesHutSim::init()
+void ThreeBody::init()
 {
 	dt = 1e4;
 	bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
@@ -60,7 +102,7 @@ void BarnesHutSim::init()
 	bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
 }
 
-void BarnesHutSim::run(Renderer * r)
+void ThreeBody::run(Renderer * r)
 {
 	SDL_Event e;
 	this->init();

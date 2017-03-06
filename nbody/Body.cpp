@@ -35,10 +35,13 @@ void Body::calculateForce(Body b)
 	dvec2 op = b.getP1(); //Other Body's Position
 	double dx = op.x - this->p1.x;
 	double dy = op.y - this->p1.y;
-	double dist = sqrt(dx*dx + dy*dy);
+
+	//dvec2 DP = op - this->p1;
+
+	double distSqrd = dx*dx + dy*dy; //dot(DP,DP);
 	//Calculate Acceleration. Can ignore mass of own body.
-	double A = (GRAV_CONST*b.getMass()) / (dist*dist + EPS*EPS);
-	this->ta += dvec2(A * dx, A * dy);
+	double A = (GRAV_CONST*b.getMass()) / (distSqrd + EPS*EPS);
+	this->ta += A * dvec2(dx, dy);
 }
 /*
 Verlett velocity solver for motion
@@ -52,6 +55,8 @@ void Body::verlettStep(double dt)
 	dvec2 position = dvec2(p1x, p1y);
 	this->p1 = position;
 
+	//this->p0 += dt * v0 + 0.5f * dt * dt * a0;
+
 	//Calculate v+½
 	double vhalfx = v0.x + (0.5*dt*a0.x);
 	double vhalfy = v0.y + (0.5*dt*a0.y);
@@ -59,10 +64,12 @@ void Body::verlettStep(double dt)
 	double a1x = this->ta.x * dt;
 	double a1y = this->ta.y * dt;
 	this->a1 = dvec2(a1x, a1y);
+
 	//Compute v+1
 	double v1x = vhalfx + (0.5*dt*a1.x);
 	double v1y = vhalfy + (0.5*dt*a1.y);
 	this->v1 = dvec2(v1x, v1y);
+
 }
 
 /*
@@ -110,15 +117,15 @@ Calculates the inelastic Collision while maintaining momentum
 */
 void Body::inelasticCollision(Body b)
 {
-	std::cout << "Before " << this->a0.x << "||" << this->a0.y << std::endl;
+	std::cout << "Before " << this->v0.x << "||" << this->v0.y << std::endl;
 	//Momentum for this Body
-	double mx = this->a0.x*this->mass;
-	double my = this->a0.y*this->mass;
+	double mx = this->v0.x*this->mass;
+	double my = this->v0.y*this->mass;
 
 	//Momentum for other Body
-	dvec2 oa = b.getCurrentAccleration();
-	double omx = oa.x*b.getMass();
-	double omy = oa.y*b.getMass();
+	dvec2 va = b.getCurrentVelocity();
+	double omx = va.x*b.getMass();
+	double omy = va.y*b.getMass();
 
 	//Total Mass
 	double tm = 1 / (this->mass + b.getMass());
@@ -127,8 +134,8 @@ void Body::inelasticCollision(Body b)
 	double vfx = (mx + omx) * tm;
 	double vfy = (my + omy) * tm;
 
-	this->a0 = dvec2(vfx, vfy);
-	std::cout << "After  " << this->a0.x << "||" << this->a0.y << std::endl;
+	this->v0 = dvec2(vfx, vfy);
+	std::cout << "After  " << this->v0.x << "||" << this->v0.y << std::endl;
 }
 /*
 Add mass and radius from the a body
@@ -138,6 +145,8 @@ void Body::add(Body b)
 {
 	this->mass += b.getMass();
 	this->radius += b.getRadius();
+
+	cout << "Mass " << &this->mass << endl;
 }
 
 /*
@@ -183,13 +192,7 @@ dvec2 Body::getCurrentAccleration()
 	return this->a0;
 }
 
-void Body::addAcc(double ax, double ay)
+dvec2 Body::getCurrentVelocity()
 {
-	this->a0.x += ax;
-	this->a0.y += ay;
-}
-
-void Body::addMass(double mass)
-{
-	this->mass += mass;
+	return this->v0;
 }
