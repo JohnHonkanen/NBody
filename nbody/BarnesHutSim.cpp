@@ -40,7 +40,13 @@ void BarnesHutSim::update()
 	}
 
 	while (!colBodies.empty()) {
-		bodies.erase(bodies.begin() + colBodies.top());
+		if (colBodies.top() < bodies.size())
+		{
+			bodies[colBodies.top()] = bodies.back();
+			bodies.pop_back();
+
+			//particleCount--;
+		}
 		colBodies.pop();
 	}
 }
