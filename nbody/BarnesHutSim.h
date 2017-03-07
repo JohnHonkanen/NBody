@@ -2,14 +2,15 @@
 #include <SDL.h>
 #include <glew.h>
 #include <vector>
-#include <stack>;
 #include <iostream>
+#include <stack>;
 #include "Simulation.h"
+#include "BarnesHutTree.h"
 #include "Body.h"
 
 using namespace std;
 
-class ThreeBody :
+class BarnesHutSim :
 	public Simulation
 {
 private:
@@ -19,9 +20,11 @@ private:
 	vector<Body> bodies;
 	stack <int> colBodies;
 	double dt;
+	BarnesHutTree *tree;
+	Quad *quad;
 public:
-	ThreeBody();
-	virtual ~ThreeBody();
+	BarnesHutSim();
+	virtual ~BarnesHutSim();
 	void init();
 	void run(Renderer *r);
 };

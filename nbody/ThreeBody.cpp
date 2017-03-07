@@ -34,7 +34,7 @@ void ThreeBody::update()
 						iB.add(jB);
 						iB.inelasticCollision(jB);
 					}
-					else if(iB.getMass() < jB.getMass()) {
+					else if (iB.getMass() < jB.getMass()) {
 						colBodies.push(i);
 						jB.add(iB);
 						jB.inelasticCollision(iB);
@@ -51,12 +51,17 @@ void ThreeBody::update()
 							jB.inelasticCollision(iB);
 						}
 					}
-						
 				}
 			}
 		}
 		iB.update(dt);
 		iB.resetForce(); 
+	}
+
+	//Clear colliding Bodies from Simulation
+	while (!colBodies.empty()) {
+		bodies.erase(bodies.begin() + colBodies.top());
+		colBodies.pop();
 	}
 
 	//Clear colliding Bodies from Simulation
