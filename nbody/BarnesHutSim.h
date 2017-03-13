@@ -19,6 +19,7 @@ private:
 	void render(Renderer *r);
 	void update();
 	bool pollEvents(SDL_Event e, Renderer *r);
+	void generateBody();
 	vector<Body> bodies;
 	stack <int> colBodies;
 	double dt;

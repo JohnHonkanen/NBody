@@ -58,8 +58,8 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 	int mx;
 	int my;
 	SDL_GetMouseState(&mx, &my);
-	float posX = mx * (simWidth/dynamic_cast<SDLRenderer*>(r)->width) -simWidth;
-	float posY = my * (simHeight / dynamic_cast<SDLRenderer*>(r)->height) -simHeight;
+	float posX = mx * (simWidth*2/dynamic_cast<SDLRenderer*>(r)->width) -simWidth;
+	float posY = simHeight * 2 - my * (simHeight*2 / dynamic_cast<SDLRenderer*>(r)->height) -simHeight;
 	//std::cout << mx << " " << my << std::endl;
 	mouse = dvec2(posX, posY);
 
@@ -83,6 +83,24 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 	return true;
 }
 
+void BarnesHutSim::generateBody()
+{
+	dvec2 p = dvec2(rnd(-simWidth, simWidth), rnd(-simHeight, simHeight));
+	dvec2 v = dvec2(rnd(0, 0), rnd(0, 0));
+	dvec2 a = dvec2(rnd(0, 0), rnd(0, 0));
+
+	double m = 1;
+	double rad = 10;
+
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+
+	vec3 c = vec3(1, 1, 1);
+
+	return bodies.push_back(Body(p, v, a, m, rad, c));
+}
+
 BarnesHutSim::BarnesHutSim()
 {
 	this->quad = new Quad(0, 0, 2 * 4000);
@@ -100,10 +118,11 @@ BarnesHutSim::~BarnesHutSim()
 void BarnesHutSim::init()
 {
 	dt = 1e4;
-	//bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
-	//bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
-	//bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
-	//bodies.push_back(Body(dvec2(0, 0), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
+	for (int i = 0; i < 100; i++)
+	{
+
+		generateBody();
+	}
 }
 
 void BarnesHutSim::run(Renderer * r)
@@ -128,7 +147,7 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 100));
 		break;
 	case SDLK_2:
-		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10));
+		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10, 20.0f, vec3(1.0f,0.0f,1.0f)));
 		break;
 	case SDLK_3:
 		std::cout <<"Creating Body" << std::endl;
