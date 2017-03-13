@@ -65,8 +65,8 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 	int mx;
 	int my;
 	SDL_GetMouseState(&mx, &my);
-	float posX = mx * (simWidth*2/dynamic_cast<SDLRenderer*>(r)->width) -simWidth;
-	float posY = simHeight * 2 - my * (simHeight*2 / dynamic_cast<SDLRenderer*>(r)->height) -simHeight;
+	float posX = mx * (simWidth*4/dynamic_cast<SDLRenderer*>(r)->width) -simWidth*2;
+	float posY = simHeight * 4 - my * (simHeight*4 / dynamic_cast<SDLRenderer*>(r)->height) -simHeight*2;
 	//std::cout << mx << " " << my << std::endl;
 	mouse = dvec2(posX, posY);
 
@@ -157,10 +157,10 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 	switch (e.key.keysym.sym) {
 	case SDLK_1:
 		std::cout << "1" << std::endl;
-		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 10000));
+		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 1000, 100.0f, vec3(0.1f)));
 		break;
 	case SDLK_2:
-		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10, 20.0f, vec3(1.0f,0.0f,1.0f)));
+		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 1000, 20.0f, vec3(1.0f,0.0f,1.0f)));
 		break;
 	case SDLK_3:
 		std::cout <<"Creating Body" << std::endl;

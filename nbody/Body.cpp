@@ -131,8 +131,8 @@ void Body::inelasticCollision(Body b)
 */
 void Body::add(Body b)
 {
-	this->mass += b.getMass();
-	this->radius += b.getRadius()/3;
+	this->mass += b.getMass()*0.75f;
+	this->radius += b.getRadius()*0.3f;
 }
 
 
