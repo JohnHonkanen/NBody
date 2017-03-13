@@ -15,12 +15,16 @@ Body BodyFactory::createBody(dvec2 p, dvec2 v, dvec2 a, double m, double r, vec3
 
 Body BodyFactory::createBlackHole(dvec2 p, double m, double r, vec3 c)
 {
-	return createBody(p, vec2(0), vec2(0), m, r, c);
+	Body blackHole = createBody(p, vec2(0), vec2(0), m, r, c);
+	blackHole.staticBody = true;
+	return blackHole;
 }
 
 Body BodyFactory::createBlackHole(dvec2 p, double m)
 {
-	return createBody(p,vec2(0), vec2(0), m, 0.01, vec3(0));
+	Body blackHole = createBody(p, vec2(0), vec2(0), m, 0.01, vec3(0));
+	blackHole.staticBody = true;
+	return blackHole;
 }
 
 Body BodyFactory::createRepulsor(dvec2 p, double m)

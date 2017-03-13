@@ -20,6 +20,9 @@ Body::Body(dvec2 p, dvec2 v, dvec2 a, double m, double r, vec3 c)
 	this->mass = m;
 	this->radius = r;
 	this->color = c;
+	gravitate = true;
+	staticBody = false;
+	canEat = true;
 }
 
 Body::~Body()
@@ -32,12 +35,14 @@ Calculate the forces affecting our particle, and add it to our velcoity (Verlett
 */
 void Body::calculateForce(Body b)
 {
-	dvec2 DeltaPos = b.getP0() - this->position;
+	if (gravitate) {
+		dvec2 DeltaPos = b.getP0() - this->position;
 
-	double distSqrd = dot(DeltaPos, DeltaPos);
-	//Calculate Acceleration. Can ignore mass of own body.
-	double A = (GRAV_CONST*b.getMass()) / (distSqrd + EPS*EPS);
-	this->force += A * DeltaPos;
+		double distSqrd = dot(DeltaPos, DeltaPos);
+		//Calculate Acceleration. Can ignore mass of own body.
+		double A = (GRAV_CONST*b.getMass()) / (distSqrd + EPS*EPS);
+		this->force += A * DeltaPos;
+	}
 }
 /*
 Verlett velocity solver for motion
@@ -64,7 +69,8 @@ Update our position and move forward (Verlett method);
 */
 void Body::update(double dt)
 {
-	this->verlettStep(dt);
+	if(!staticBody)
+		this->verlettStep(dt);
 }
 /*
 Resets temporary acceleration/force
@@ -86,6 +92,9 @@ Circle-circle Collision
 */
 bool Body::checkCollision(Body b)
 {
+	if (!canEat)
+		return false;
+
 	dvec2 op = b.getP0(); //Other Body's Position
 	double dx = op.x - this->position.x;
 	double dy = op.y - this->position.y;
@@ -123,7 +132,7 @@ void Body::inelasticCollision(Body b)
 void Body::add(Body b)
 {
 	this->mass += b.getMass();
-	this->radius += b.getRadius();
+	this->radius += b.getRadius()/3;
 }
 
 

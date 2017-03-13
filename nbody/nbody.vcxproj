@@ -157,6 +157,7 @@
     <ClCompile Include="BarnesHutTree.cpp" />
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="BodyFactory.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Quad.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="BarnesHutTree.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="BodyFactory.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Renderer.h" />

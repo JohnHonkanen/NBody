@@ -7,14 +7,14 @@ void BarnesHutSim::render(Renderer * r)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-	glOrtho(-simWidth, simWidth, -simHeight, simHeight, 0.0f, 1.0f); // Reference system of our simulation
+	glOrtho(-simWidth*2, simWidth*2, -simHeight*2, simHeight*2, 0.0f, 1.0f); // Reference system of our simulation
 	glColor3f(0.5, 1.0, 1.0);
 
 	for (int i = 0; i < bodies.size(); i++) {
 		this->bodies[i].render(r);
 	}
 	mouseBody.render(r);
-	tree->draw();
+	//tree->draw();
 	r->swap();
 }
 
@@ -22,7 +22,7 @@ void BarnesHutSim::update()
 {
 	tree->clearTree();
 
-	this->quad = new Quad(0, 0, 2 * 4000);
+	this->quad = new Quad(0, 0, 8 * simWidth);
 	tree = new BarnesHutTree(this->quad, 0);
 
 	for (int i = 0; i < this->bodies.size(); i++) {
@@ -36,6 +36,13 @@ void BarnesHutSim::update()
 		if (quad->contains(bodies[i].getP0().x, bodies[i].getP0().y)) {
 			tree->updateForce(i, &this->bodies[i], this->colBodies, this->bodies);
 			this->bodies[i].update(dt);
+			this->bodies[i].clock.updateClock();
+			if (!this->bodies[i].gravitate && this->bodies[i].clock.alarm())
+			{
+				this->bodies[i].gravitate = true;
+				this->bodies[i].canEat = true;
+
+			}
 		}
 	}
 
@@ -86,8 +93,10 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 void BarnesHutSim::generateBody()
 {
 	dvec2 p = dvec2(rnd(-simWidth, simWidth), rnd(-simHeight, simHeight));
-	dvec2 v = dvec2(rnd(0, 0), rnd(0, 0));
-	dvec2 a = dvec2(rnd(0, 0), rnd(0, 0));
+	//dvec2 p = dvec2(0,0);
+	double vBase = 0;
+	dvec2 v = dvec2(rnd(-vBase, vBase), rnd(-vBase, vBase));
+	dvec2 a = dvec2(rnd(-0, 0), rnd(-0, 0));
 
 	double m = 1;
 	double rad = 10;
@@ -97,18 +106,23 @@ void BarnesHutSim::generateBody()
 	float b = 1.0f;
 
 	vec3 c = vec3(1, 1, 1);
-
-	return bodies.push_back(Body(p, v, a, m, rad, c));
+	Body body = Body(p, v, a, m, rad, c);
+	body.canEat = false;
+	body.gravitate = false;
+	body.clock.startClock();
+	body.clock.setDelay(10);
+	return bodies.push_back(body);
 }
 
 BarnesHutSim::BarnesHutSim()
 {
-	this->quad = new Quad(0, 0, 2 * 4000);
+	simHeight = 4000;
+	simWidth = 4000;
+	this->quad = new Quad(0, 0, 8 * simWidth);
 	tree = new BarnesHutTree(this->quad, 0);
 	keypressed = false;
 	mouseBody = Body(dvec2(0), dvec2(0), dvec2(0), 1, 10, vec3(0.0f, 1.0f, 1.0f));
-	simHeight = 4000;
-	simWidth = 4000;
+	
 }
 
 BarnesHutSim::~BarnesHutSim()
@@ -118,9 +132,8 @@ BarnesHutSim::~BarnesHutSim()
 void BarnesHutSim::init()
 {
 	dt = 1e4;
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1500; i++)
 	{
-
 		generateBody();
 	}
 }
@@ -144,7 +157,7 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 	switch (e.key.keysym.sym) {
 	case SDLK_1:
 		std::cout << "1" << std::endl;
-		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 100));
+		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 10000));
 		break;
 	case SDLK_2:
 		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10, 20.0f, vec3(1.0f,0.0f,1.0f)));
@@ -152,6 +165,9 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 	case SDLK_3:
 		std::cout <<"Creating Body" << std::endl;
 		bodies.push_back(BarnesHutSim::factory.createBody(mouse, dvec2(0), dvec2(0), 1, 10, vec3(1.0f,1.0f,1.0f)));
+		break;
+	case SDLK_4:
+		init();
 		break;
 	}
 }

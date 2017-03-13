@@ -2,6 +2,7 @@
 #include <iostream>
 #include <glm\glm.hpp>
 #include "Renderer.h"
+#include "Clock.h"
 using namespace glm;
 using namespace std;
 class Body
@@ -27,6 +28,10 @@ public:
 	dvec2 getCurrentVelocity();
 	double GRAV_CONST = 6.673E-11; //Gravity Constant
 	double EPS = 1; //Damapener to avoid infinites
+	Clock clock;
+	bool gravitate;
+	bool staticBody;
+	bool canEat;
 private:
 	dvec2 position; //Positions
 	dvec2 velocity; //Velocity
