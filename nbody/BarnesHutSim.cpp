@@ -7,13 +7,13 @@ void BarnesHutSim::render(Renderer * r)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-	glOrtho(-2000, 2000, -2000, 2000, 0.0f, 1.0f); // Reference system of our simulation
+	glOrtho(-simWidth, simWidth, -simHeight, simHeight, 0.0f, 1.0f); // Reference system of our simulation
 	glColor3f(0.5, 1.0, 1.0);
 
 	for (int i = 0; i < bodies.size(); i++) {
 		this->bodies[i].render(r);
 	}
-
+	mouseBody.render(r);
 	tree->draw();
 	r->swap();
 }
@@ -49,10 +49,20 @@ void BarnesHutSim::update()
 		}
 		colBodies.pop();
 	}
+
+	mouseBody = Body(mouse, dvec2(0), dvec2(0), 1, 10, vec3(0.0f, 1.0f, 1.0f));
 }
 
-bool BarnesHutSim::pollEvents(SDL_Event e)
+bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 {
+	int mx;
+	int my;
+	SDL_GetMouseState(&mx, &my);
+	float posX = mx * (simWidth/dynamic_cast<SDLRenderer*>(r)->width) -simWidth;
+	float posY = my * (simHeight / dynamic_cast<SDLRenderer*>(r)->height) -simHeight;
+	//std::cout << mx << " " << my << std::endl;
+	mouse = dvec2(posX, posY);
+
 	if (e.type == SDL_QUIT)
 		return false;
 	if (e.type == SDL_KEYDOWN)
@@ -66,7 +76,10 @@ bool BarnesHutSim::pollEvents(SDL_Event e)
 			break;
 		}
 	}
+	 
 
+	if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
+		pollInputs(e);
 	return true;
 }
 
@@ -74,6 +87,10 @@ BarnesHutSim::BarnesHutSim()
 {
 	this->quad = new Quad(0, 0, 2 * 4000);
 	tree = new BarnesHutTree(this->quad, 0);
+	keypressed = false;
+	mouseBody = Body(dvec2(0), dvec2(0), dvec2(0), 1, 10, vec3(0.0f, 1.0f, 1.0f));
+	simHeight = 4000;
+	simWidth = 4000;
 }
 
 BarnesHutSim::~BarnesHutSim()
@@ -83,10 +100,10 @@ BarnesHutSim::~BarnesHutSim()
 void BarnesHutSim::init()
 {
 	dt = 1e4;
-	bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
-	bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
-	bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
-	bodies.push_back(Body(dvec2(0, 0), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
+	//bodies.push_back(Body(dvec2(500, 300), dvec2(0, 0), dvec2(0), 1, 10, vec3(1.0, 1.0, 1.0)));
+	//bodies.push_back(Body(dvec2(500, -500), dvec2(-0, 0), dvec2(0), 1, 10, vec3(0.0, 1.0, 1.0)));
+	//bodies.push_back(Body(dvec2(-500, 500), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
+	//bodies.push_back(Body(dvec2(0, 0), dvec2(0), dvec2(0), 1, 10, vec3(1.0, 0.0, 0.0)));
 }
 
 void BarnesHutSim::run(Renderer * r)
@@ -96,8 +113,26 @@ void BarnesHutSim::run(Renderer * r)
 	bool running = true;
 	while (running) {
 		SDL_PollEvent(&e);
-		running = this->pollEvents(e);
+		running = this->pollEvents(e, r);
 		this->update();
 		this->render(r);
+	}
+}
+
+void BarnesHutSim::pollInputs(SDL_Event e)
+{
+
+	switch (e.key.keysym.sym) {
+	case SDLK_1:
+		std::cout << "1" << std::endl;
+		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 100));
+		break;
+	case SDLK_2:
+		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10));
+		break;
+	case SDLK_3:
+		std::cout <<"Creating Body" << std::endl;
+		bodies.push_back(BarnesHutSim::factory.createBody(mouse, dvec2(0), dvec2(0), 1, 10, vec3(1.0f,1.0f,1.0f)));
+		break;
 	}
 }

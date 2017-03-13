@@ -4,6 +4,8 @@
 
 SDL_Window *SDLRenderer::setup(SDL_GLContext & context)
 {
+	width = 800;
+	height = 800;
 	SDL_Window * window;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) // Initialize video
 	{
@@ -24,7 +26,7 @@ SDL_Window *SDLRenderer::setup(SDL_GLContext & context)
 
 													   // Create 800x600 window
 	window = SDL_CreateWindow("SDL/GLM/OpenGL Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		800, 800, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!window) // Check window was created OK
 	{
 		//Exception Here

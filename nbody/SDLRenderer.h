@@ -9,7 +9,6 @@ class SDLRenderer :
 private:
 	SDL_GLContext glContext;
 	SDL_Window *window;
-
 	SDL_Window *setup(SDL_GLContext &context);
 public:
 	SDLRenderer();
@@ -18,5 +17,7 @@ public:
 	void renderCircle(glm::dvec3 pos, double radius, int numPoints, glm::vec3 color);
 	void swap();
 	void destroy();
+
+	float width, height;
 };
 
