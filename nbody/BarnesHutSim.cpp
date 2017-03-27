@@ -177,7 +177,7 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 25000, 1.0f, vec3(0.1f)));
 		break;
 	case SDLK_2:
-		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 3000, 20.0f, vec3(1.0f,0.0f,1.0f)));
+		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 10000, 20.0f, vec3(1.0f,0.0f,1.0f)));
 		break;
 	case SDLK_3:
 		std::cout <<"Creating Body" << std::endl;
