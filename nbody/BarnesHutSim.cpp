@@ -1,3 +1,17 @@
+/*
+
+Name:
+
+Student ID:
+
+I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
+
+I am aware of the penalties incurred by submitting in full or in part work that is not our own and that was developed by third parties that are not appropriately acknowledged.
+
+This file was created by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219).
+*/
+
+
 #include "BarnesHutSim.h"
 #include "Rnd.h"
 
@@ -7,7 +21,7 @@ void BarnesHutSim::render(Renderer * r)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-	glOrtho(-simWidth*2, simWidth*2, -simHeight*2, simHeight*2, 0.0f, 1.0f); // Reference system of our simulation
+	glOrtho(-simWidth*multiplier, simWidth*multiplier, -simHeight*multiplier, simHeight*multiplier, 0.0f, 1.0f); // Reference system of our simulation
 	glColor3f(0.5, 1.0, 1.0);
 
 	for (int i = 0; i < bodies.size(); i++) {
@@ -22,7 +36,7 @@ void BarnesHutSim::update()
 {
 	tree->clearTree();
 
-	this->quad = new Quad(0, 0, 8 * simWidth);
+	this->quad = new Quad(0, 0, 4*multiplier * simWidth);
 	tree = new BarnesHutTree(this->quad, 0);
 
 	for (int i = 0; i < this->bodies.size(); i++) {
@@ -65,8 +79,8 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 	int mx;
 	int my;
 	SDL_GetMouseState(&mx, &my);
-	float posX = mx * (simWidth*4/dynamic_cast<SDLRenderer*>(r)->width) -simWidth*2;
-	float posY = simHeight * 4 - my * (simHeight*4 / dynamic_cast<SDLRenderer*>(r)->height) -simHeight*2;
+	float posX = mx * (simWidth*multiplier *2/dynamic_cast<SDLRenderer*>(r)->width) -simWidth*multiplier;
+	float posY = simHeight * multiplier*2 - my * (simHeight*multiplier*2 / dynamic_cast<SDLRenderer*>(r)->height) -simHeight*multiplier;
 	//std::cout << mx << " " << my << std::endl;
 	mouse = dvec2(posX, posY);
 
@@ -92,7 +106,7 @@ bool BarnesHutSim::pollEvents(SDL_Event e, Renderer *r)
 
 void BarnesHutSim::generateBody()
 {
-	dvec2 p = dvec2(rnd(-simWidth, simWidth), rnd(-simHeight, simHeight));
+	dvec2 p = dvec2(rnd(-simWidth *multiplier, simWidth*multiplier), rnd(-simHeight*multiplier, simHeight*multiplier));
 	//dvec2 p = dvec2(0,0);
 	double vBase = 0;
 	dvec2 v = dvec2(rnd(-vBase, vBase), rnd(-vBase, vBase));
@@ -101,11 +115,11 @@ void BarnesHutSim::generateBody()
 	double m = 1;
 	double rad = 10;
 
-	float r = 1.0f;
-	float g = 1.0f;
-	float b = 1.0f;
+	float r = 0.5f;
+	float g = 0.4f;
+	float b = 0.4f;
 
-	vec3 c = vec3(1, 1, 1);
+	vec3 c = vec3(r,g,b);
 	Body body = Body(p, v, a, m, rad, c);
 	body.canEat = false;
 	body.gravitate = false;
@@ -118,7 +132,7 @@ BarnesHutSim::BarnesHutSim()
 {
 	simHeight = 4000;
 	simWidth = 4000;
-	this->quad = new Quad(0, 0, 8 * simWidth);
+	this->quad = new Quad(0, 0, 4* multiplier * simWidth);
 	tree = new BarnesHutTree(this->quad, 0);
 	keypressed = false;
 	mouseBody = Body(dvec2(0), dvec2(0), dvec2(0), 1, 10, vec3(0.0f, 1.0f, 1.0f));
@@ -131,8 +145,9 @@ BarnesHutSim::~BarnesHutSim()
 
 void BarnesHutSim::init()
 {
-	dt = 1e4;
-	for (int i = 0; i < 1500; i++)
+	dt = 4e3;
+	multiplier = 4.0f;
+	for (int i = 0; i < spawnBodies; i++)
 	{
 		generateBody();
 	}
@@ -140,7 +155,9 @@ void BarnesHutSim::init()
 
 void BarnesHutSim::run(Renderer * r)
 {
+	srand(time(NULL));
 	SDL_Event e;
+	spawnBodies = 15000;
 	this->init();
 	bool running = true;
 	while (running) {
@@ -157,16 +174,17 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 	switch (e.key.keysym.sym) {
 	case SDLK_1:
 		std::cout << "1" << std::endl;
-		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 1000, 100.0f, vec3(0.1f)));
+		bodies.push_back(BarnesHutSim::factory.createBlackHole(mouse, 25000, 1.0f, vec3(0.1f)));
 		break;
 	case SDLK_2:
-		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 1000, 20.0f, vec3(1.0f,0.0f,1.0f)));
+		bodies.push_back(BarnesHutSim::factory.createRepulsor(mouse, 3000, 20.0f, vec3(1.0f,0.0f,1.0f)));
 		break;
 	case SDLK_3:
 		std::cout <<"Creating Body" << std::endl;
 		bodies.push_back(BarnesHutSim::factory.createBody(mouse, dvec2(0), dvec2(0), 1, 10, vec3(1.0f,1.0f,1.0f)));
 		break;
 	case SDLK_4:
+		spawnBodies = 1000;
 		init();
 		break;
 	}

@@ -1,3 +1,17 @@
+/*
+
+Name:
+
+Student ID:
+
+I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
+
+I am aware of the penalties incurred by submitting in full or in part work that is not our own and that was developed by third parties that are not appropriately acknowledged.
+
+This file was created by John Honkanen (B00291253).
+*/
+
+
 #include "Body.h"
 
 Body::Body()
@@ -132,7 +146,16 @@ void Body::inelasticCollision(Body b)
 void Body::add(Body b)
 {
 	this->mass += b.getMass()*0.75f;
-	this->radius += b.getRadius()*0.3f;
+	this->radius += b.getRadius()*0.08f;
+	if (this->color.g < 0.6) {
+		this->color.g += 0.05;
+	}
+	else if (this->color.b < 1) {
+		this->color.b += 0.05;
+	}
+	else if (this->color.r < 1) {
+		this->color.r += 0.05;
+	}
 }
 
 
