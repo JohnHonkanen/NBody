@@ -1,8 +1,8 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 
@@ -39,7 +39,7 @@ public:
 	vec3 getColor();
 	dvec2 getCurrentAccleration();
 	dvec2 getCurrentVelocity();
-	double GRAV_CONST = 6.673E-11; //Gravity Constant
+	double GRAV_CONST = 6.674E-11; //Gravity Constant
 	double EPS = 1; //Damapener to avoid infinites
 	Clock clock;
 	bool gravitate;

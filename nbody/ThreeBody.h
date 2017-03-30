@@ -1,8 +1,8 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 

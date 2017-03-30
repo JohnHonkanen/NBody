@@ -1,8 +1,8 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 
@@ -44,6 +44,7 @@ Body::~Body()
 }
 /*
 Calculate the forces affecting our particle, and add it to our velcoity (Verlett method);
+Newton's Gravitational acceleration (Gravity, James Brown(1986), pg 12)
 @param b Body
 @param dt deltaTime
 */
@@ -122,6 +123,7 @@ bool Body::checkCollision(Body b)
 }
 /*
 Calculates the inelastic Collision while maintaining momentum
+The Law of Momentum Conservation (https://www.sciencetopia.net/physics/linear-momentum-principles)
 @param Colliding Body
 */
 
@@ -133,10 +135,10 @@ void Body::inelasticCollision(Body b)
 	dvec2 otherMomentum = b.getCurrentVelocity() * b.getMass();
 
 	//Total Mass
-	double totalMass = 1/(this->mass + b.getMass());
+	double OneOvertotalMass = 1/(this->mass + b.getMass());
 
 	//Final Velocity
-	this->velocity = (thisMomentum + otherMomentum) * totalMass;
+	this->velocity = (thisMomentum + otherMomentum) * OneOvertotalMass;
 }
 
 /*

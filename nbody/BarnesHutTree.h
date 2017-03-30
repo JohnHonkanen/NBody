@@ -1,8 +1,8 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 
@@ -12,20 +12,19 @@ This file was created by John Honkanen (B00291253), Adam Stanton (B00266256) and
 */
 
 #pragma once
-#include "Physics.h"
+#define _USE_MATH_DEFINES
 #include "Body.h"
 #include "Quad.h";
 #include <iostream>
 #include <map>
 #include <stack>;
 #include <vector>;
-#define MAX_DEPTH 30
+#define MAX_DEPTH 15
 
 using namespace std;
 
 const int numberOfPoints = 30;
 const float STEP = 2 * M_PI / numberOfPoints;
-const double maxSize = SOLAR_MASS * 10 + 1e20;
 
 class BarnesHutTree {
 public:

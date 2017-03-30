@@ -1,8 +1,8 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 
@@ -28,7 +28,8 @@ void BarnesHutSim::render(Renderer * r)
 		this->bodies[i].render(r);
 	}
 	mouseBody.render(r);
-	//tree->draw();
+	if(drawTree)
+		tree->draw();
 	r->swap();
 }
 
@@ -42,6 +43,9 @@ void BarnesHutSim::update()
 	for (int i = 0; i < this->bodies.size(); i++) {
 		if (quad->contains(bodies[i].getP0().x, bodies[i].getP0().y)) {
 			tree->insert(i, &this->bodies[i]);
+		}
+		else {
+			colBodies.push(i);
 		}
 	}
 
@@ -112,8 +116,8 @@ void BarnesHutSim::generateBody()
 	dvec2 v = dvec2(rnd(-vBase, vBase), rnd(-vBase, vBase));
 	dvec2 a = dvec2(rnd(-0, 0), rnd(-0, 0));
 
-	double m = 1;
-	double rad = 10;
+	double m = 10;
+	double rad = 15;
 
 	float r = 0.5f;
 	float g = 0.4f;
@@ -145,8 +149,9 @@ BarnesHutSim::~BarnesHutSim()
 
 void BarnesHutSim::init()
 {
-	dt = 4e3;
+	dt = 2e3;
 	multiplier = 4.0f;
+	drawTree = false;
 	for (int i = 0; i < spawnBodies; i++)
 	{
 		generateBody();
@@ -157,7 +162,7 @@ void BarnesHutSim::run(Renderer * r)
 {
 	srand(time(NULL));
 	SDL_Event e;
-	spawnBodies = 15000;
+	spawnBodies = 1500;
 	this->init();
 	bool running = true;
 	while (running) {
@@ -186,6 +191,9 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 	case SDLK_4:
 		spawnBodies = 1000;
 		init();
+		break;
+	case SDLK_5:
+		drawTree = !drawTree;
 		break;
 	}
 }

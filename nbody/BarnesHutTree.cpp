@@ -1,14 +1,16 @@
 /*
 
-Name:
+Name: John Honkanen
 
-Student ID:
+Student ID: B00291253
 
 I declare that the following code was produced by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219) as a group assignment for the IPM module and that this is our own work.
 
 I am aware of the penalties incurred by submitting in full or in part work that is not our own and that was developed by third parties that are not appropriately acknowledged.
 
 This file was created by John Honkanen (B00291253), Adam Stanton (B00266256) and Kyle Pearce (B00287219).
+
+Based on Chindesaurus Banrnes Hut tree implementation: https://github.com/chindesaurus/BarnesHut-N-Body/blob/master/BHTree.java, adapted to C++ and own nbody system.
 */
 
 #include "BarnesHutTree.h"
@@ -41,6 +43,9 @@ void BarnesHutTree::insert(int key,Body *b)
 		this->hasBody = true;
 	}
 	else if (this->isExternal(this) == false) {
+		/*
+			Center of Mass Equation (R. Nave, Center of Mass, http://hyperphysics.phy-astr.gsu.edu/hbase/cm.html)
+		*/
 		double tMass = this->totalMass + b->getMass();
 		this->cmx = (this->cmx * this->totalMass + b->getP0().x* b->getMass()) / tMass;
 		this->cmy = (this->cmy * this->totalMass + b->getP0().y* b->getMass()) / tMass;
@@ -189,13 +194,13 @@ void BarnesHutTree::clearTree()
 		this->bodies.clear();
 
 	if (this->NW != nullptr)
-		delete this->NW;
+		this->NW->clearTree();
 	if (this->SW != nullptr)
-		delete this->SW;
+		this->SW->clearTree();
 	if (this->SE != nullptr)
-		delete this->SE;
+		this->SE->clearTree();
 	if (this->NE != nullptr)
-		delete this->NE;
+		this->NE->clearTree();
 
 	delete this->quad;
 	delete this;
