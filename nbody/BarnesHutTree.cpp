@@ -147,8 +147,9 @@ void BarnesHutTree::updateForce(int i, Body *body, stack<int> &colBodies, vector
 				if (iB->checkCollision(*jB)) {
 					if (iB->getMass() >= jB->getMass()) {
 						colBodies.push(key);
-						iB->add(*jB);
 						iB->inelasticCollision(*jB);
+						iB->add(*jB);
+						
 
 					}
 

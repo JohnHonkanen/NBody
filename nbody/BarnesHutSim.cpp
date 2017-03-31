@@ -116,9 +116,13 @@ void BarnesHutSim::generateBody()
 	double vBaseMax = 1;
 	dvec2 v = dvec2(rnd(-vBaseMin, vBaseMax)*0.03f, rnd(-vBaseMin, vBaseMax)*0.03f);
 	dvec2 a = dvec2(rnd(-0, 0), rnd(-0, 0));
-
-	double m = 40;
-	double rad = 30;
+	double m = 10;
+	double rad = 8;
+	if (spawnBodies < 2000) {
+		m = 30;
+		rad = 25;
+	}
+	
 
 	float r = 0.5f;
 	float g = 0.4f;
@@ -163,7 +167,7 @@ void BarnesHutSim::run(Renderer * r)
 {
 	srand(time(NULL));
 	SDL_Event e;
-	spawnBodies = 1500;
+	spawnBodies = 10000;
 	this->init();
 	bool running = true;
 	while (running) {
@@ -190,7 +194,7 @@ void BarnesHutSim::pollInputs(SDL_Event e)
 		bodies.push_back(BarnesHutSim::factory.createBody(mouse, dvec2(0), dvec2(0), 1, 10, vec3(1.0f,1.0f,1.0f)));
 		break;
 	case SDLK_4:
-		spawnBodies = 1000;
+		spawnBodies = 100;
 		init();
 		break;
 	case SDLK_5:
