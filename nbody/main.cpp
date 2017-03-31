@@ -16,7 +16,7 @@ This file was created by John Honkanen (B00291253) and Adam Stanton (B00266256).
 #include "ThreeBody.h"
 int main(int argc, char *argv[])
 {
-	printf("Welcome to the Nbody 15k Simulation \n \n ");
+	printf("Welcome to the Nbody 1500 Simulation \n \n ");
 	printf("Press the following keys for the following effects: \n 1) Spawn Black Hole. \n 2) Spawn Repulsor. \n 3) Spawn Single Body. \n 4) Spawn 1000 Bodies. \n 5)Draw Quad Tree \n");
 	SDLRenderer renderer;
 	renderer.init();

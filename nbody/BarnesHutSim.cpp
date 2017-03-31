@@ -112,12 +112,13 @@ void BarnesHutSim::generateBody()
 {
 	dvec2 p = dvec2(rnd(-simWidth *multiplier, simWidth*multiplier), rnd(-simHeight*multiplier, simHeight*multiplier));
 	//dvec2 p = dvec2(0,0);
-	double vBase = 0;
-	dvec2 v = dvec2(rnd(-vBase, vBase), rnd(-vBase, vBase));
+	double vBaseMin = 1;
+	double vBaseMax = 1;
+	dvec2 v = dvec2(rnd(-vBaseMin, vBaseMax)*0.03f, rnd(-vBaseMin, vBaseMax)*0.03f);
 	dvec2 a = dvec2(rnd(-0, 0), rnd(-0, 0));
 
-	double m = 10;
-	double rad = 15;
+	double m = 40;
+	double rad = 30;
 
 	float r = 0.5f;
 	float g = 0.4f;
@@ -149,7 +150,7 @@ BarnesHutSim::~BarnesHutSim()
 
 void BarnesHutSim::init()
 {
-	dt = 2e3;
+	dt = 1e2;
 	multiplier = 4.0f;
 	drawTree = false;
 	for (int i = 0; i < spawnBodies; i++)

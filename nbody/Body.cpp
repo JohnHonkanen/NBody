@@ -51,7 +51,7 @@ Newton's Gravitational acceleration (Gravity, James Brown(1986), pg 12)
 void Body::calculateForce(Body b)
 {
 	if (gravitate) {
-		dvec2 DeltaPos = b.getP0() - this->position;
+		dvec2 DeltaPos = normalize(b.getP0() - this->position);
 
 		double distSqrd = dot(DeltaPos, DeltaPos);
 		//Calculate Acceleration. Can ignore mass of own body.
@@ -147,8 +147,8 @@ void Body::inelasticCollision(Body b)
 */
 void Body::add(Body b)
 {
-	this->mass += b.getMass()*0.75f;
-	this->radius += b.getRadius()*0.08f;
+	this->mass += b.getMass();
+	this->radius = sqrt((b.getRadius() *  b.getRadius()) + (this->radius * this->radius));
 	if (this->color.g < 0.6) {
 		this->color.g += 0.05;
 	}
